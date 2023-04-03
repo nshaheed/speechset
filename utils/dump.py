@@ -173,6 +173,7 @@ if __name__ == '__main__':
         parser.add_argument('--chunksize', default=1, type=int)
         parser.add_argument('--default-sid', default=-1, type=int)
         parser.add_argument('--sr', default=22050, type=int)
+        parser.add_argument('--test-data', default=False, type=bool)
         args = parser.parse_args()
 
         # hard code the reader
@@ -181,6 +182,11 @@ if __name__ == '__main__':
             # datasets.LibriTTS('./datasets/LibriTTS/train-clean-360', args.sr),
             # datasets.LibriSpeech('./datasets/LibriSpeech/train-other-500', args.sr),
             # datasets.VCTK('./datasets/VCTK-Corpus', args.sr)
+        ])
+
+        if args.test-data:
+            reader = datasets.ConcatReader([
+            datasets.LibriTTS('./datasets/LibriTTS/test-clean', args.sr)
         ])
 
         DumpReader.dump(

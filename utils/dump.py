@@ -178,9 +178,10 @@ if __name__ == '__main__':
         # hard code the reader
         reader = datasets.ConcatReader([
             datasets.LibriTTS('./datasets/LibriTTS/train-clean-100', args.sr),
-            datasets.LibriTTS('./datasets/LibriTTS/train-clean-360', args.sr),
+            # datasets.LibriTTS('./datasets/LibriTTS/train-clean-360', args.sr),
             # datasets.LibriSpeech('./datasets/LibriSpeech/train-other-500', args.sr),
-            datasets.VCTK('./datasets/VCTK-Corpus', args.sr)])
+            # datasets.VCTK('./datasets/VCTK-Corpus', args.sr)]
+        )
 
         DumpReader.dump(
             reader,

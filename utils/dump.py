@@ -186,7 +186,7 @@ if __name__ == '__main__':
 
         if args.test-data:
             reader = datasets.ConcatReader([
-            datasets.LibriTTS('./datasets/LibriTTS/test-clean', args.sr)
+            datasets.LibriTTS('./datasets/libri_test_clean/', args.sr)
         ])
 
         DumpReader.dump(

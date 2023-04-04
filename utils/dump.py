@@ -177,17 +177,21 @@ if __name__ == '__main__':
         args = parser.parse_args()
 
         # hard code the reader
-        reader = datasets.ConcatReader([
-            datasets.LibriTTS('./datasets/LibriTTS/train-clean-100', args.sr),
-            # datasets.LibriTTS('./datasets/LibriTTS/train-clean-360', args.sr),
-            # datasets.LibriSpeech('./datasets/LibriSpeech/train-other-500', args.sr),
-            # datasets.VCTK('./datasets/VCTK-Corpus', args.sr)
-        ])
+        reader = None
 
-        if args.test-data:
+        if args.test_data:
             reader = datasets.ConcatReader([
-            datasets.LibriTTS('./datasets/libri_test_clean/', args.sr)
-        ])
+                datasets.LibriTTS('./datasets/LibriTTS/test-clean', args.sr)
+            ])
+        else:
+            reader = datasets.ConcatReader([
+                datasets.LibriTTS('./datasets/LibriTTS/train-clean-100', args.sr),
+                # datasets.LibriTTS('./datasets/LibriTTS/train-clean-360', args.sr),
+                # datasets.LibriSpeech('./datasets/LibriSpeech/train-other-500', args.sr),
+                # datasets.VCTK('./datasets/VCTK-Corpus', args.sr)
+            ])
+
+
 
         DumpReader.dump(
             reader,

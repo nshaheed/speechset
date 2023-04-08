@@ -30,7 +30,7 @@ class IDWrapper(SpeechSet):
         Returns:
             id and normalized datum.
         """
-        return ids, self.speechset.normalize(text, speech)
+        return ids, self.speechset.normalize(ids, text, speech)
 
     def collate(self,
                 bunch: List[Tuple[Union[int, List[int]],

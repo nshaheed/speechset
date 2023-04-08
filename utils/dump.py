@@ -68,7 +68,13 @@ class DumpReader(datasets.DataReader):
         with open(os.path.join(data_dir, 'meta.json')) as f:
             meta = json.load(f)
 
-        speakers = [info['name'] for info in meta.values()]
+        #speakers = [info['name'] for info in meta.values()]
+        speakers = []
+
+        for key, info in meta.items():
+          if type(info) == Dict:
+            speakers.append(info['name'])
+
         # transpose
         transcripts = {}
         for sid, info in meta.items():

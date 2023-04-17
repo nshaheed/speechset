@@ -78,6 +78,9 @@ class DumpReader(datasets.DataReader):
         # transpose
         transcripts = {}
         for sid, info in meta.items():
+            if not sid.isnumeric():
+                continue
+
             sid = int(sid)
             for (i, text, _) in info['lists']:
                 path = os.path.join(data_dir, INTER, f'{i}.npy')

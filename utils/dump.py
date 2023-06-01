@@ -1,5 +1,5 @@
-import multiprocessing as mp
 import json
+import multiprocessing as mp
 import os
 from typing import Callable, Dict, List, Optional, Tuple
 
@@ -125,6 +125,21 @@ class DumpReader(datasets.DataReader):
         sid, text, _ = outputs
         return i, sid, text, path
 
+    @staticmethod
+    def lookupDataReader(type: str) -> datasets.DataReader:
+        match type:
+            case 'LibriSpeech':
+                return datasets.LibriSpeech
+            case 'LibriTTS':
+                return datasets.LibriTTS
+            case 'LJSpeech':
+                return datasets.LJSpeech
+            case 'VCTK':
+                return datasets.VCTK
+            case _:
+                print(f'Dataset type \"{type}\" was not found')
+                return None
+
     @classmethod
     def dump(cls,
              reader: datasets.DataReader,
@@ -182,29 +197,50 @@ if __name__ == '__main__':
         parser.add_argument('--chunksize', default=1, type=int)
         parser.add_argument('--default-sid', default=-1, type=int)
         parser.add_argument('--sr', default=22050, type=int)
-        parser.add_argument('--test-data', default=False, type=bool)
+        parser.add_argument('--config', required=True, type=str)
         args = parser.parse_args()
 
-        # hard code the reader
-        reader = None
+        # read json config file
+        with open(args.config, 'r') as f:
+            config = json.load(f)
 
-        if args.test_data:
-            reader = datasets.ConcatReader([
-                datasets.LibriTTS('./datasets/LibriTTS/test-clean', args.sr)
-            ])
-        else:
-            reader = datasets.ConcatReader([
-                datasets.LibriTTS('./datasets/LibriTTS/train-clean-100', args.sr),
-                # datasets.LibriTTS('./datasets/LibriTTS/train-clean-360', args.sr),
-                # datasets.LibriSpeech('./datasets/LibriSpeech/train-other-500', args.sr),
-                # datasets.VCTK('./datasets/VCTK-Corpus', args.sr)
-            ])
+        train_list = []
+        test_list = []
+
+        for name, dataset_info in config['train_data'].items():
+            dataset = None
+            data_path = dataset_info['data_path']
+            sr = dataset_info.get('sr')
+
+            dataset_type = DumpReader.lookupDataReader(dataset_info['type'])
+            train_list.append(dataset_type(data_path, sr))
+
+        for name, dataset_info in config['test_data'].items():
+            dataset = None
+            data_path = dataset_info['data_path']
+            sr = dataset_info.get('sr')
+
+            dataset_type = DumpReader.lookupDataReader(dataset_info['type'])
+            test_list.append(dataset_type(data_path, sr))
+
+        train_reader = datasets.ConcatReader(train_list)
+        test_reader = datasets.ConcatReader(test_list)
 
 
+        train_out_dir = config['train_dump_path']
+        test_out_dir = config['test_dump_path']
+
+        # Dump out training and test data
+        DumpReader.dump(
+            train_reader,
+            train_out_dir,
+            args.sr,
+            args.num_proc,
+            args.chunksize)
 
         DumpReader.dump(
-            reader,
-            args.out_dir,
+            test_reader,
+            test_out_dir,
             args.sr,
             args.num_proc,
             args.chunksize)

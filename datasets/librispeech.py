@@ -55,5 +55,6 @@ class LibriSpeech(DataReader):
                         text = ' '.join(text).strip()
                         fullpath = os.path.join(path, f'{filename}.flac')
                         trans[fullpath] = (sid, text)
+
         # read audio
         return speakers, trans

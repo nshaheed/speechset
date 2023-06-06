@@ -136,6 +136,8 @@ class DumpReader(datasets.DataReader):
                 return datasets.LJSpeech
             case 'VCTK':
                 return datasets.VCTK
+            case 'VocalSet':
+                return datasets.VocalSet
             case _:
                 print(f'Dataset type \"{type}\" was not found')
                 return None

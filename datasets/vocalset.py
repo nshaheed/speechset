@@ -19,10 +19,13 @@ class VocalSet(DataReader):
         """
 
         self.sr = sr or VocalSet.SR
-        self.singers_ = self.load_data(data_dir)
+        self.singers_, self.transcript = self.load_data(data_dir)
 
-    def singers(self) -> List[str]:
+    def speakers(self) -> List[str]:
         return self.singers_
+
+    def dataset(self) -> List[str]:
+        return self.transcript
 
     def load_data(self, data_dir: str) -> List[str]:
         """Load audio. This is sort of backward because atm

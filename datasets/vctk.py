@@ -43,7 +43,7 @@ class VCTK(DataReader):
         Returns:
             list of speakers, transcripts.
         """
-        wavpath = os.path.join(data_dir, 'wav48')
+        wavpath = os.path.join(data_dir, 'wav48_silence_trimmed')
         txtpath = os.path.join(data_dir, 'txt')
         # generate file lists
         speakers, trans = os.listdir(wavpath), {}

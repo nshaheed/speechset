@@ -11,7 +11,7 @@ class VocalSet(DataReader):
 
     SR = 44100
 
-    def __init__(self, data_dir: str, sr: Optional[int] = None):
+    def __init__(self, data_dir: str, sr: Optional[int] = None, output_sr: Optional[int] = None):
         """Initializer.
         Args:
             data_dir: dataset directory.
@@ -19,6 +19,7 @@ class VocalSet(DataReader):
         """
 
         self.sr = sr or VocalSet.SR
+        self.output_sr = output_sr or self.sr
         self.singers_, self.transcript = self.load_data(data_dir)
 
     def speakers(self) -> List[str]:

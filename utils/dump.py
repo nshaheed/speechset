@@ -35,6 +35,8 @@ class DumpReader(datasets.DataReader):
             sr = prev_sr
         # alias
         self.prev_sr, self.sr = prev_sr, sr
+        # sampling rate that all data is outputted to
+        self.output_sr = sr
 
     def dataset(self) -> Dict[str, Tuple[int, str]]:
         """Return file reader.
@@ -138,6 +140,8 @@ class DumpReader(datasets.DataReader):
                 return datasets.VCTK
             case 'VocalSet':
                 return datasets.VocalSet
+            case 'Opencpop':
+                return datasets.Opencpop
             case _:
                 print(f'Dataset type \"{type}\" was not found')
                 return None
@@ -208,6 +212,7 @@ if __name__ == '__main__':
 
         train_list = []
         test_list = []
+        output_sr = config['output_sr']
 
         for name, dataset_info in config['train_data'].items():
             dataset = None
@@ -215,7 +220,7 @@ if __name__ == '__main__':
             sr = dataset_info.get('sr')
 
             dataset_type = DumpReader.lookupDataReader(dataset_info['type'])
-            train_list.append(dataset_type(data_path, sr))
+            train_list.append(dataset_type(data_path, sr, output_sr))
 
         for name, dataset_info in config['test_data'].items():
             dataset = None
@@ -223,7 +228,7 @@ if __name__ == '__main__':
             sr = dataset_info.get('sr')
 
             dataset_type = DumpReader.lookupDataReader(dataset_info['type'])
-            test_list.append(dataset_type(data_path, sr))
+            test_list.append(dataset_type(data_path, sr, output_sr))
 
         train_reader = datasets.ConcatReader(train_list)
         test_reader = datasets.ConcatReader(test_list)

@@ -12,13 +12,14 @@ class LibriSpeech(DataReader):
     """
     SR = 16000
 
-    def __init__(self, data_dir: str, sr: Optional[int] = None):
+    def __init__(self, data_dir: str, sr: Optional[int] = None, output_sr: Optional[int] = None):
         """Initializer.
         Args:
             data_dir: dataset directory.
             sr: sampling rate.
         """
         self.sr = sr or LibriSpeech.SR
+        self.output_sr = output_sr or self.sr
         self.speakers_, self.transcript = self.load_data(data_dir)
 
     def dataset(self) -> List[str]:

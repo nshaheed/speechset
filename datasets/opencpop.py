@@ -11,14 +11,15 @@ class Opencpop(DataReader):
 
     SR = 44100
 
-    def __init__(self, data_dir: str, sr: Optional[int] = None):
+    def __init__(self, data_dir: str, sr: Optional[int] = None, output_sr: Optional[int] = None):
         """Initializer.
         Args:
             data_dir: dataset directory.
             sr: sampling rate.
         """
 
-        self.sr = sr or VocalSet.SR
+        self.sr = sr or Opencpop.SR
+        self.output_sr = output_sr or self.sr
         self.speakers_, self.transcript = self.load_data(data_dir)
 
     def speakers(self) -> List[str]:
@@ -37,9 +38,11 @@ class Opencpop(DataReader):
         """
 
         trans = {}
-        singers = os.listdir(data_dir)
+        # singers = os.listdir(data_dir)
+        singers = ['opencpop']
 
-        for root, dirs, files in os.walk(os.path.join(data_dir, singer)):
+        print(data_dir, singers)
+        for root, dirs, files in os.walk(data_dir):
             for file in files:
                 if not file.endswith('.wav'):
                     continue

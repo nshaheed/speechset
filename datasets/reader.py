@@ -56,6 +56,10 @@ class DataReader:
         trans = self.dataset()
         # [T]
         audio = self.load_audio(path, self.sr)
+
+        # resample if needed
+        if self.sr != self.output_sr:
+            audio = librosa.resample(audio, self.sr, self.output_sr)
         # int, str
         sid, text = trans.get(path, (-1, ''))
         # int, str, [np.float32; T]

@@ -11,7 +11,7 @@ class Config:
                 if None is provided, single datum will be returned.
         """
         # audio config
-        self.sr = 22050
+        self.sr = 44100
 
         # stft
         self.fft = 1024
